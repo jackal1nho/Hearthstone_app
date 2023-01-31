@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
+
+    <item
+        android:id="@+id/nav_all_cards"
+        android:title="All Cards" />
+
+    <item
+        android:id="@+id/nav_cards_class"
+        android:title="Cards by Class" />
+
+    <item
+        android:id="@+id/nav_card_backs"
+        android:title="Card Backs" />
+
+</menu>
