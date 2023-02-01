@@ -9,9 +9,4 @@
         android:id="@+id/search"
         android:icon="@drawable/magnifier"
         android:title="Search" />
-
-    <item
-        android:id="@+id/card_backs"
-        android:icon="@drawable/card"
-        android:title="Card Backs" />
 </menu>

@@ -1,10 +1,8 @@
 <resources>
-    <string name="app_name">Navigation Drawer</string>
-    <!-- to toggle the open close button of the navigation drawer -->
-    <string name="nav_open">Open</string>
-    <string name="nav_close">Close</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="app_name">HS App</string>
     <string name="Tab1">Tab1</string>
     <string name="Tab2">Tab2</string>
     <string name="Tab3">Tab3</string>
+    <string name="hint_search">Search &#8230;</string>
+    <string name="label_button_search">SEARCH</string>
 </resources>

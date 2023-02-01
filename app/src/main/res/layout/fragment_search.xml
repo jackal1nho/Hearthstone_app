@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment">
-
-    <TextView
+    android:padding="5dp"
+    android:orientation="vertical" >
+    <EditText
+        android:id="@+id/text_for_search"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/Tab2" />
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:hint="@string/hint_search"
+        android:background="@drawable/textbox_shape"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp" />
+    <Button
+        android:id="@+id/btn_Search"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/label_button_search"
+        android:background="@drawable/button_shape"
+        android:padding="5dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#FFFFFF"/>
+</LinearLayout>
