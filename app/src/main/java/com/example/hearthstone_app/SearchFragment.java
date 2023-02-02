@@ -1,35 +1,28 @@
 package com.example.hearthstone_app;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 
-import android.util.Log;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 
 public class SearchFragment extends Fragment {
 
     Button btn_search;
     EditText et_searchInput;
-
+    RecyclerView rv_searchList;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,43 +33,67 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         btn_search = view.findViewById(R.id.btn_Search);
         et_searchInput = view.findViewById(R.id.text_for_search);
+        rv_searchList = view.findViewById(R.id.rv_searchList);
+        final SearchService searchService = new SearchService(getActivity());
 
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RequestQueue queue = Volley.newRequestQueue(getActivity());
-                String url = "https://omgvamp-hearthstone-v1.p.rapidapi.com/cards/search/" + et_searchInput.getText().toString();
+                searchService.getSearchData(et_searchInput.getText().toString(), new SearchService.VolleyResponseListener() {
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(getActivity(), "Something wrong", Toast.LENGTH_SHORT).show();
+                    }
 
-                JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
-                    String cardName = "";
                     @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            JSONObject card = response.getJSONObject(0);
-                            cardName = card.getString("name");
-                        } catch (JSONException e) {
-                            throw new RuntimeException(e);
+                    public void onResponse(List<SearchModel> searchModelList) {
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                        rv_searchList.setLayoutManager(layoutManager);
+                        SearchAdapter searchAdapter = new SearchAdapter(searchModelList);
+                        rv_searchList.setAdapter(searchAdapter);
+                    }
+                    class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
+                        private final List<SearchModel> searchModelList;
+
+                        SearchAdapter(List<SearchModel> searchModelList) {
+                            this.searchModelList = searchModelList;
                         }
-                        Toast.makeText(getActivity(), "Card name = " + cardName, Toast.LENGTH_SHORT).show();
+
+                        @NonNull
+                        @Override
+                        public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_items, parent, false);
+                            return new SearchViewHolder(itemView);
+                        }
+
+                        @Override
+                        public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
+                            SearchModel searchModel = searchModelList.get(position);
+                            holder.nameView.setText(searchModel.getName());
+                            holder.cardSetView.setText(searchModel.getCardSet());
+                            holder.typeView.setText(searchModel.getType());
+                        }
+                        @Override
+                        public int getItemCount() {
+                            return searchModelList.size();
+                        }
+
+                        class SearchViewHolder extends RecyclerView.ViewHolder {
+                            final TextView nameView, typeView, cardSetView;
+
+
+                            SearchViewHolder(@NonNull View itemView) {
+                                super(itemView);
+                                nameView = itemView.findViewById(R.id.name);
+                                typeView = itemView.findViewById(R.id.type);
+                                cardSetView = itemView.findViewById(R.id.cardSet);
+                            }
+                        }
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "Something wrong!", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> headers = new HashMap<>();
-                        headers.put("X-RapidAPI-Host", "omgvamp-hearthstone-v1.p.rapidapi.com");
-                        headers.put("X-RapidAPI-Key", "a925f48572msh743e225cd065b07p1e98e1jsn65d8c18b5b2c");
-                        return headers;
-                    }
-                };
-                queue.add(request);
+                });
             }
         });
-
         return view;
     }
 }
+
