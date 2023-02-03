@@ -1,4 +1,6 @@
 package com.example.hearthstone_app;
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -6,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Environment;
+import java.io.File;
+import java.io.FileOutputStream;
 
 import java.util.List;
+
+
 
 
 public class SearchFragment extends Fragment {
@@ -23,6 +31,7 @@ public class SearchFragment extends Fragment {
     Button btn_search;
     EditText et_searchInput;
     RecyclerView rv_searchList;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
